@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ICEnein</string>
+    <string name="title_activity_fence">FenceActivity</string>
 </resources>

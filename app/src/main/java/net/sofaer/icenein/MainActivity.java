@@ -1,6 +1,8 @@
 package net.sofaer.icenein;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -64,14 +66,16 @@ public class MainActivity extends AppCompatActivity
             for(Object key: sightings.keySet()) {
                 Geofence.Builder builder = new Geofence.Builder();
                 HashMap location = (HashMap)((HashMap)sightings.get(key)).get("location");
-                builder.setCircularRegion((double)location.get("latitude"), (double)location.get("longitude"), 1000);
+                builder.setCircularRegion((double)location.get("latitude"), (double)location.get("longitude"), 50);
                 builder.setRequestId((String)key);
                 builder.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER);
                 builder.setExpirationDuration(1000 * 60 * 60 * 8);
                 requestBuilder.addGeofence(builder.build());
             }
             GeofencingRequest request = requestBuilder.build();
-            PendingResult<Status> result = LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, request, null);
+            Intent intent = new Intent(getApplicationContext(), FenceActivity.class);
+            PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+            PendingResult<Status> result = LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, request, pIntent);
 
             Log.v("Fence", request.toString());
         }
